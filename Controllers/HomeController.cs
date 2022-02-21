@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportsORM.Models;
 
 
@@ -97,6 +98,44 @@ namespace SportsORM.Controllers
         [HttpGet("level_2")]
         public IActionResult Level2()
         {
+            ViewBag.AtlanticSoccerConf = _context.Teams
+            .Include(t => t.CurrLeague)
+            .Where(t => t.CurrLeague.Name == "Atlantic Soccer Conference")
+            .ToList();
+
+            ViewBag.PenguinsPlayers = _context.Players
+            .Include(p => p.CurrentTeam)
+            .Where(p => p.CurrentTeam.Location == "Boston" && p.CurrentTeam.TeamName == "Penguins")
+            .ToList();
+
+            ViewBag.CollegiateBaseballPlayers = _context.Players
+            .Include(p => p.CurrentTeam.CurrLeague)
+            .Where(p => p.CurrentTeam.CurrLeague.Name == "International Collegiate Baseball Conference")
+            .ToList();
+
+            ViewBag.AmateurFootballPlayers = _context.Players
+            .Include(p => p.CurrentTeam.CurrLeague)
+            .Where(p => p.CurrentTeam.CurrLeague.Name == "American Conference of Amateur Football" && p.LastName == "Lopez")
+            .ToList();
+
+            ViewBag.FootballPLayers = _context.Players
+            .Include(p => p.CurrentTeam.CurrLeague)
+            .Where(p => p.CurrentTeam.CurrLeague.Sport == "Football")
+            .ToList();
+
+            ViewBag.SophiaTeams = _context.Players
+            .Include(p => p.CurrentTeam)
+            .Where(p => p.FirstName == "Sophia")
+            .ToList();
+
+            ViewBag.SophiaLeagues = _context.Players
+            .Include(p => p.CurrentTeam.CurrLeague)
+            .Where(p => p.FirstName == "Sophia")
+            .ToList();
+
+            ViewBag.NotWashingtonFloresPlayers = _context.Players
+            .Include(p => p.CurrentTeam)
+            .Where(p => p.CurrentTeam.TeamName != "Washington Roughriders" && p.LastName == "Flores");
             return View();
         }
 
